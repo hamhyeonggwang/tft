@@ -20,15 +20,9 @@ export default function SearchPage() {
           </h1>
           <p className="mt-1 text-xs text-zinc-500">
             지역과 세부 조건을 선택하여 소아작업치료를 제공하는 의료기관을
-            찾아보세요.
+            찾아보세요. (지역별 목록과 통합 예정)
           </p>
         </div>
-        <Link
-          href="/map"
-          className="rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700 hover:bg-sky-100"
-        >
-          지도 기반 검색 보기
-        </Link>
       </div>
 
       <div className="grid gap-6 md:grid-cols-[260px,1fr]">

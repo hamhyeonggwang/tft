@@ -25,11 +25,11 @@ export default function Home() {
             <Link href="/search" className="hover:text-sky-600">
               의료기관 찾기
             </Link>
-            <Link href="/map" className="hover:text-sky-600">
-              지도 기반 검색
-            </Link>
             <Link href="/regions" className="hover:text-sky-600">
               지역별 목록
+            </Link>
+            <Link href="/partners" className="hover:text-sky-600">
+              협력 학회
             </Link>
             <Link href="/contribute" className="hover:text-sky-600">
               데이터 등록/제보
@@ -94,11 +94,10 @@ export default function Home() {
                   내 아이에게 맞는 병원 찾기
                 </Link>
                 <Link
-                  href="/map"
+                  href="/regions"
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-sky-200/80 bg-white/90 px-5 py-2 text-sm font-medium text-sky-700 backdrop-blur hover:bg-sky-50"
                 >
-                  지도에서 한눈에 보기
-                  <span className="text-[11px] text-zinc-400">Kakao / Mapbox</span>
+                  지역별로 한눈에 보기
                 </Link>
               </div>
 
