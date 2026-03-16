@@ -189,7 +189,7 @@ export default function Home() {
                         </p>
                       </div>
                       <span className="rounded-full bg-sky-50 px-2 py-0.5 text-[10px] font-medium text-sky-700 group-hover:bg-sky-600 group-hover:text-white">
-                        상세보기
+                        병원 홈페이지 바로가기
                       </span>
                     </Link>
                   ))

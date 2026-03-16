@@ -197,11 +197,11 @@ export default function SearchPage() {
                       {hospital.phone && <span>{hospital.phone}</span>}
                       {hospital.website && (
                         <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] text-zinc-600">
-                          웹사이트 있음
+                          병원 홈페이지 정보 있음
                         </span>
                       )}
                       <span className="rounded-full bg-sky-600 px-3 py-1 text-[11px] font-medium text-white group-hover:bg-sky-700">
-                        상세 보기
+                        홈페이지
                       </span>
                     </div>
                   </div>
