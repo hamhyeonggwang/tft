@@ -48,7 +48,8 @@ function main() {
     const region = REGION_MAP[city];
     if (!region) continue;
 
-    const key = `${name}__${city}`;
+    // 병원명 기준으로 중복 제거 (같은 병원명이면 한 번만 등록)
+    const key = name;
     if (hospitalsByKey.has(key)) continue;
 
     const descriptionSource = String(

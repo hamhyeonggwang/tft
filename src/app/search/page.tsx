@@ -1,3 +1,6 @@
+"use client";
+
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { hospitals } from "@/data/hospitals";
 import type { RegionCode } from "@/types/hospital";
@@ -10,7 +13,34 @@ const regions: { code: RegionCode; label: string }[] = [
   { code: "daegu", label: "대구" },
 ];
 
+const diagnosisFilters = [
+  "뇌병변장애",
+  "자폐스펙트럼장애",
+  "지적장애",
+  "유전적 질환",
+  "척수손상아동",
+  "기타 (발달지연, DCD, ADHD 등)",
+] as const;
+
 export default function SearchPage() {
+  const [activeDiagnoses, setActiveDiagnoses] = useState<string[]>([]);
+
+  const filteredHospitals = useMemo(() => {
+    if (activeDiagnoses.length === 0) return hospitals;
+    return hospitals.filter((h) => {
+      if (!h.pediatricOTDescription) return false;
+      return activeDiagnoses.every((keyword) =>
+        h.pediatricOTDescription?.includes(keyword)
+      );
+    });
+  }, [activeDiagnoses]);
+
+  const toggleDiagnosis = (label: string) => {
+    setActiveDiagnoses((prev) =>
+      prev.includes(label) ? prev.filter((x) => x !== label) : [...prev, label]
+    );
+  };
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-6 flex items-center justify-between gap-4">
@@ -46,12 +76,38 @@ export default function SearchPage() {
 
           <div>
             <h2 className="text-xs font-semibold text-zinc-900">
-              소아작업치료 세부 분야
+              진단 기준 필터
+            </h2>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {diagnosisFilters.map((label) => {
+                const active = activeDiagnoses.includes(label);
+                return (
+                  <button
+                    key={label}
+                    type="button"
+                    onClick={() => toggleDiagnosis(label)}
+                    className={`rounded-full px-2 py-1 text-[11px] ring-1 ${
+                      active
+                        ? "bg-sky-600 text-white ring-sky-600"
+                        : "bg-white text-zinc-700 ring-zinc-200 hover:bg-sky-50 hover:text-sky-700 hover:ring-sky-200"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="h-px bg-zinc-100" />
+
+          <div>
+            <h2 className="text-xs font-semibold text-zinc-900">
+              소아작업치료 세부 분야 (예정)
             </h2>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {[
                 "감각통합",
-                "발달지연",
                 "학령기/학교",
                 "수지/상지",
                 "섭식/급식",
@@ -88,7 +144,7 @@ export default function SearchPage() {
             <p>
               검색결과{" "}
               <span className="font-semibold">
-                {hospitals.length.toLocaleString()}
+                {filteredHospitals.length.toLocaleString()}
               </span>
               건
             </p>
@@ -101,7 +157,7 @@ export default function SearchPage() {
             </div>
           </div>
 
-          {hospitals.length === 0 ? (
+          {filteredHospitals.length === 0 ? (
             <div className="flex h-40 flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-zinc-200 bg-white text-center text-[11px] text-zinc-600">
               <p className="font-medium text-zinc-700">
                 아직 등록된 의료기관 데이터가 없습니다.
@@ -119,7 +175,7 @@ export default function SearchPage() {
             </div>
           ) : (
             <div className="grid gap-3">
-              {hospitals.map((hospital) => (
+              {filteredHospitals.map((hospital) => (
                 <Link
                   key={hospital.id}
                   href={`/hospitals/${hospital.id}`}
