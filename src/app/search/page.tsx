@@ -124,19 +124,7 @@ export default function SearchPage() {
             </div>
           </div>
 
-          <div className="h-px bg-zinc-100" />
-
-          <div className="space-y-2">
-            <h2 className="text-xs font-semibold text-zinc-900">기타 조건</h2>
-            <label className="flex items-center gap-2 text-[11px] text-zinc-700">
-              <input type="checkbox" className="h-3 w-3 rounded border-zinc-300" />
-              소아작업치료실 운영 기관만
-            </label>
-            <label className="flex items-center gap-2 text-[11px] text-zinc-700">
-              <input type="checkbox" className="h-3 w-3 rounded border-zinc-300" />
-              야간 진료 (예정)
-            </label>
-          </div>
+          {/* 기타 조건 섹션은 추후 실제 데이터 구조 확정 후 추가 예정 */}
         </aside>
 
         <section className="space-y-4">
