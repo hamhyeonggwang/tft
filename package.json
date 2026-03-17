@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "import:hospitals": "node scripts/generate-hospitals.js --input \"data-input/hospitals.csv\""
   },
   "dependencies": {
     "csv-parse": "^6.1.0",

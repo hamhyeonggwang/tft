@@ -1,12 +1,22 @@
-// One-off script to convert survey CSV into Hospital[] data.
-// Usage: node scripts/generate-hospitals.js
+// Convert survey CSV into Hospital[] data.
+// Usage:
+//   node scripts/generate-hospitals.js --input "/path/to/file.csv"
+//   node scripts/generate-hospitals.js --input data-input/hospitals.csv
 
 const fs = require("fs");
 const path = require("path");
 const { parse } = require("csv-parse/sync");
 
+function getArgValue(flag) {
+  const idx = process.argv.indexOf(flag);
+  if (idx === -1) return undefined;
+  return process.argv[idx + 1];
+}
+
 const CSV_PATH =
-  "/Users/ham1234/Downloads/문서/의료기반 소아작업치료 현황 조사(응답) - 설문지 응답 시트1.csv";
+  getArgValue("--input") ||
+  process.env.HOSPITALS_CSV ||
+  path.join(process.cwd(), "data-input", "hospitals.csv");
 
 const REGION_MAP = {
   서울특별시: "seoul",
@@ -29,6 +39,14 @@ const REGION_MAP = {
 };
 
 function main() {
+  if (!fs.existsSync(CSV_PATH)) {
+    console.error(
+      `CSV file not found: ${CSV_PATH}\n` +
+        `Provide --input "/absolute/or/relative/path.csv" or set HOSPITALS_CSV.`
+    );
+    process.exit(1);
+  }
+
   const csvRaw = fs.readFileSync(CSV_PATH, "utf8");
   const records = parse(csvRaw, {
     columns: true,
@@ -48,8 +66,8 @@ function main() {
     const region = REGION_MAP[city];
     if (!region) continue;
 
-    // 병원명 기준으로 중복 제거 (같은 병원명이면 한 번만 등록)
-    const key = name;
+    // 병원명 기준으로 중복 제거 (공백/대소문자 차이를 최대한 흡수)
+    const key = name.replace(/\s+/g, " ").trim().toLowerCase();
     if (hospitalsByKey.has(key)) continue;
 
     const descriptionSource = String(
@@ -75,7 +93,9 @@ function main() {
     });
   }
 
-  const hospitals = Array.from(hospitalsByKey.values());
+  const hospitals = Array.from(hospitalsByKey.values()).sort((a, b) =>
+    a.name.localeCompare(b.name, "ko")
+  );
 
   const outPath = path.join(
     __dirname,
@@ -91,7 +111,10 @@ export const hospitals: Hospital[] = ${JSON.stringify(hospitals, null, 2)};
 `;
 
   fs.writeFileSync(outPath, fileContent, "utf8");
-  console.log(`Wrote ${hospitals.length} hospitals to ${outPath}`);
+  console.log(
+    `Wrote ${hospitals.length} hospitals to ${outPath}\n` +
+      `Source: ${CSV_PATH}`
+  );
 }
 
 main();
